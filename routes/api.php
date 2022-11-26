@@ -21,14 +21,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });*/
 
-Route::get('/user', [AuthController::class, 'me'])->middleware(['auth:sanctum']);
+
+Route::prefix('/user')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [AuthController::class, 'me']);
+    Route::get('/user-type', [UserController::class, 'getUserType']);
+});
+
+Route::get('/users', [UserController::class, 'index'])->middleware(['auth:sanctum']);
 
 /**
  *  Routes pour collaborateur
  */
 
+
 Route::prefix('collaborator')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/add', [UserController::class, 'store']);
 });
+
+
 
 

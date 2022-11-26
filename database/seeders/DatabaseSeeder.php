@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '+261325033378',
             'adresse' => 'Mangarivotra',
             'password' => bcrypt('password'),
+            'type' => 3
         ]);
     }
 }
