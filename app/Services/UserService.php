@@ -25,6 +25,11 @@ class UserService {
         foreach (User::TYPE as $key => $type) {
             if($type === $userType) return $key;
         }
+    }
 
+    public function updatePhoto(User $user, string $photoName) : User {
+        $user->photo = $photoName;
+        $user->update();
+        return $user;
     }
 }
