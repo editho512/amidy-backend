@@ -47,4 +47,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function setTypeAttribute($value)
+    {
+        $this->attributes['type'] = $this->getUserTypeByValue($value);
+    }
+
+    public function getTypeAttribute(){
+        return self::TYPE[$this->attributes['type']];
+    }
+
+    private function getUserTypeByValue(String $userType): int
+    {
+        foreach (self::TYPE as $key => $type) {
+            if ($type === $userType) return $key;
+        }
+    }
 }

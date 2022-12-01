@@ -13,23 +13,27 @@ class UserService {
 
     public function createUser(array $user) : User {
 
-        $user['password'] = bcrypt($user['password']);
-        $user['type'] = $this->getUserTypeByValue($user['type']);
+        $user['password'] = $this->passwordCrypt($user['password']);
 
         return User::create($user);
-
     }
 
-    public function getUserTypeByValue(String $userType): int {
+    public function updateUser(User $userOld, array $user): User
+    {
+        if(isset($user['password'])) $user['password'] = $this->passwordCrypt($user['password']);
 
-        foreach (User::TYPE as $key => $type) {
-            if($type === $userType) return $key;
-        }
+        $userOld->update($user);
+
+        return $userOld;
     }
 
     public function updatePhoto(User $user, string $photoName) : User {
         $user->photo = $photoName;
         $user->update();
         return $user;
+    }
+
+    public function passwordCrypt(String $password) : String {
+        return bcrypt($password);
     }
 }

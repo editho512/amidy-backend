@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use App\Models\User;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\RequestRules\UserRequestRules;
 
-class UserCreateUserRequest extends FormRequest
+class UserCreateRequest extends FormRequest
 {
+
+    use UserRequestRules;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,14 +28,10 @@ class UserCreateUserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|min:3',
-            'phone' => 'required|min:10',
+        return $this->validationRules() + [
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:6',
-            'photo' => 'sometimes|mimes:jpeg,png,jpg,gif',
-            'phone' => 'sometimes|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'type' => ['required', Rule::in(User::TYPE)]
+
         ];
     }
 

@@ -19,24 +19,22 @@ use App\Http\Controllers\UserController;
 /*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-});*/
-
+});
+*/
 
 Route::prefix('/user')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [AuthController::class, 'me']);
     Route::get('/user-type', [UserController::class, 'getUserType']);
+    Route::post('/add', [UserController::class, 'store']);
+    Route::get('/edit/{user}', [UserController::class, 'edit']);
+    Route::post('/update/{user}', [UserController::class, 'update']);
+    Route::get('/delete/{user}', [UserController::class, 'delete']);
 });
 
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth:sanctum']);
 
-/**
- *  Routes pour collaborateur
- */
 
 
-Route::prefix('collaborator')->middleware(['auth:sanctum'])->group(function () {
-    Route::post('/add', [UserController::class, 'store']);
-});
 
 
 
