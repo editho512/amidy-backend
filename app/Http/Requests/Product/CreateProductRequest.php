@@ -2,10 +2,16 @@
 
 namespace App\Http\Requests\Product;
 
+use App\Models\Tag;
+use App\Models\Category;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\RequestRules\ProductRequestRules;
 
 class CreateProductRequest extends FormRequest
 {
+
+    use ProductRequestRules;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,9 +29,16 @@ class CreateProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+
+        return $this->validationRules() + [
             'name' => 'required|unique:products,name|min:2',
-            'stock_alert' => 'sometimes|numeric|min:0'
         ];
+
+    }
+
+    // Form request class...
+    protected function prepareForValidation(): void
+    {
+        $this->before();
     }
 }

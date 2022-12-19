@@ -64,6 +64,9 @@ Route::prefix('/category')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/product')->middleware(['auth:sanctum'])->group(function(){
     Route::post('/add', [ProductController::class, 'store']);
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/edit/{product}', [ProductController::class, 'edit']);
+    Route::post('/update', [ProductController::class, 'update']);
 });
 
 

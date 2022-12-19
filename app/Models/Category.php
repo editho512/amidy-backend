@@ -31,4 +31,8 @@ class Category extends Model
             if ($type === $userType) return $key;
         }
     }
+
+    public function products(){
+        return $this->belongsToMany(Product::class, 'product_categories');
+    }
 }
