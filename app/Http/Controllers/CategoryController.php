@@ -2,17 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Category\CreateCategoryRequest;
-use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Services\PaginationService;
+use App\Http\Requests\Category\CreateCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
 
-    public function index($type)
+    public function index(Request $request, PaginationService $paginationService,$type)
     {
-        return Category::whereType($type)->get();
+        $categories = Category::whereType($type);
+
+        //search the categories
+        $categories->when(
+            $request->search && $request->search != "",
+            function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->search . '%');
+            }
+        );
+
+        // paginate the categories
+        if ($request->page) {
+            $categories = $paginationService->paginate($categories, ["page" => $request->page]);
+            return [
+                "data" => $categories->get(),
+                "options" => $paginationService->getOptions()
+            ];
+        }
+
+        return $categories->get();
     }
 
     public function store(CreateCategoryRequest $request)

@@ -2,17 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Tag\CreateTagRequest;
-use App\Http\Requests\Tag\UpdateTagRequest;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Services\PaginationService;
+use App\Http\Requests\Tag\CreateTagRequest;
+use App\Http\Requests\Tag\UpdateTagRequest;
 
 class TagController extends Controller
 {
 
-    public function index($type)
+    public function index(Request $request, PaginationService $paginationService,$type)
     {
-        return Tag::whereType($type)->get();
+        $tags = Tag::whereType($type);
+
+        // search the tags
+        $tags->when($request->search && $request->search != "",
+            function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->search . '%');
+            });
+
+        // paginate the tags
+        if ($request->page) {
+            $tags = $paginationService->paginate($tags, ["page" => $request->page]);
+            return [
+                "data" => $tags->get(),
+                "options" => $paginationService->getOptions()
+            ];
+        }
+
+        return $tags->get();
     }
 
     public function getType(){

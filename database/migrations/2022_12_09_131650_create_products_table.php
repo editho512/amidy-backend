@@ -17,10 +17,13 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('reference')->nullable();
             $table->string('name');
-            $table->float('stock_alert')->nullable();
+            $table->decimal('stock_alert',  5, 2 )->nullable();
             $table->text('description')->nullable();
             $table->text('attributs')->nullable();
             $table->string('unit')->nullable();
+            $table->decimal('price', 20, 2)->nullable();
+            $table->decimal('tva', 5, 2)->nullable();
+            $table->decimal('stock', 30, 2)->nullable();
             $table->timestamps();
         });
     }

@@ -46,28 +46,32 @@ Route::prefix('/setting')->middleware(['auth:sanctum'])->group(function(){
 
 Route::prefix('/tag')->middleware(['auth:sanctum'])->group(function(){
     Route::get('/get-type', [TagController::class, 'getType']);
-    Route::get('/{type}', [TagController::class, 'index']);
     Route::post('/add', [TagController::class, 'store']);
     Route::get('/edit/{tag}', [TagController::class, 'edit']);
     Route::patch('/update/{tag}', [TagController::class, 'update']);
     Route::delete('/delete/{tag}', [TagController::class, 'delete']);
 });
+Route::get('/tag/{type}', [TagController::class, 'index']);
 
 Route::prefix('/category')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/get-type', [CategoryController::class, 'getType']);
-    Route::get('/{type}', [CategoryController::class, 'index']);
     Route::post('/add', [CategoryController::class, 'store']);
     Route::get('/edit/{category}', [CategoryController::class, 'edit']);
     Route::patch('/update/{category}', [CategoryController::class, 'update']);
     Route::delete('/delete/{category}', [CategoryController::class, 'delete']);
 });
+Route::get('/category/{type}', [CategoryController::class, 'index']);
 
 Route::prefix('/product')->middleware(['auth:sanctum'])->group(function(){
     Route::post('/add', [ProductController::class, 'store']);
-    Route::get('/', [ProductController::class, 'index']);
     Route::get('/edit/{product}', [ProductController::class, 'edit']);
     Route::post('/update', [ProductController::class, 'update']);
+    Route::post('/price/{product}', [ProductController::class, 'updatePrice']);
+    Route::post('/stock/{product}', [ProductController::class, 'updateStock']);
+
 });
+
+Route::get('/product', [ProductController::class, 'index']);
 
 
 
