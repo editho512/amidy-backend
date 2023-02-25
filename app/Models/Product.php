@@ -10,10 +10,14 @@ class Product extends Model
     use HasFactory;
 
     public $timestamp = false;
+
     public $fillable = ['reference', 'name', 'stock_alert', 'description', 'attributs', 'unit', 'price', 'tva', 'stock'];
+
     public $casts = [
         'attributs' => 'array'
     ];
+
+    public $appends = ["price_ttc"];
 
     public function tags(){
         return $this->belongsToMany(Tag::class, 'product_tags');
@@ -25,6 +29,10 @@ class Product extends Model
 
     public function photos(){
         return $this->hasMany(PhotoProduct::class, 'product_id', 'id')->orderBy('photo_products.order', 'desc');
+    }
+
+    public function orders(){
+        return $this->hasMany(Order::class, "order_products");
     }
 
     public function generateReference(){
@@ -88,6 +96,17 @@ class Product extends Model
         return  $query->whereHas('tags', function ($where) use ($tags) {
             $where->whereIn('tags.id', $tags);
         });
+    }
+
+    public function getPriceTtcAttribute(){
+        $taxe_amount = (floatval($this->price) * floatval($this->tva)) / 100;
+
+        return floatval($this->price) + $taxe_amount;
+    }
+
+    public function total_amount(){
+
+        return floatval($this->stock) * floatval($this->price_ttc);
     }
 
 }

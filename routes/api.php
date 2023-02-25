@@ -1,14 +1,18 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use League\CommonMark\Node\Query\OrExpr;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SocialiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +30,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
+
+
+
+Route::middleware(['guest'])->post('/auth/register', [AuthController::class, 'register']);
 
 Route::prefix('/user')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [AuthController::class, 'me']);
@@ -72,6 +80,18 @@ Route::prefix('/product')->middleware(['auth:sanctum'])->group(function(){
 });
 
 Route::get('/product', [ProductController::class, 'index']);
+
+Route::prefix('/order')->middleware(['auth:sanctum'])->group(function(){
+    Route::get('/', [OrderController::class, 'index']);
+    Route::post('/add', [OrderController::class, 'store']);
+    Route::get('/edit/{order}', [OrderController::class, 'edit']);
+    Route::post('/pay/{order}', [OrderController::class, 'pay']);
+    Route::get('/deliver/{order}', [OrderController::class, 'deliver']);
+
+});
+
+Route::post("callback/{provider}", [SocialiteController::class, 'callback'])->name('socialite.callback');
+
 
 
 
