@@ -75,6 +75,10 @@ class ProductController extends Controller
         return response(["status" => "success"]);
    }
 
+   public function previewStore(){
+    return Product::with(['photos'])->take(4)->get();
+   }
+
    private function productAction($product, $request){
 
         if ($request->category && count($request->category) > 0) $product->categories()->sync($request->category);

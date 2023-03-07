@@ -13,6 +13,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,14 +73,16 @@ Route::get('/category/{type}', [CategoryController::class, 'index']);
 
 Route::prefix('/product')->middleware(['auth:sanctum'])->group(function(){
     Route::post('/add', [ProductController::class, 'store']);
-    Route::get('/edit/{product}', [ProductController::class, 'edit']);
     Route::post('/update', [ProductController::class, 'update']);
     Route::post('/price/{product}', [ProductController::class, 'updatePrice']);
     Route::post('/stock/{product}', [ProductController::class, 'updateStock']);
 
 });
 
+Route::get('/product/edit/{product}', [ProductController::class, 'edit']);
 Route::get('/product', [ProductController::class, 'index']);
+Route::get('/product/preview-store', [ProductController::class, 'previewStore']);
+
 
 Route::prefix('/order')->middleware(['auth:sanctum'])->group(function(){
     Route::get('/', [OrderController::class, 'index']);
@@ -92,7 +95,7 @@ Route::prefix('/order')->middleware(['auth:sanctum'])->group(function(){
 
 Route::post("callback/{provider}", [SocialiteController::class, 'callback'])->name('socialite.callback');
 
-
+Route::post("/notification/contact-us", [NotificationController::class, 'contactUs']);
 
 
 
