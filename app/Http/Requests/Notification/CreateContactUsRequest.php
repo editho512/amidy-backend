@@ -27,7 +27,7 @@ class CreateContactUsRequest extends FormRequest
             'name' => ["required", "min:2"],
             'object' => ["required", "min:2"],
             'email'  => ["required", "email", "min:2"],
-            'message' => ["required", "min:10"]
+            'messages' => ["required", "min:10"]
         ];
     }
 }
